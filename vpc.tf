@@ -1,3 +1,11 @@
+data "aws_availability_zones" "available" {
+  filter {
+    name   = "zone-type"
+    values = ["availability-zone"]
+  }
+}
+
+
 # ---------------------------
 # VPC
 # ---------------------------
@@ -13,9 +21,10 @@ resource "aws_vpc" "receipt_scanner_vpc" {
 # Subnet
 # ---------------------------
 resource "aws_subnet" "receipt_scanner_sn" {
+  count             = var.num_subnets
   vpc_id            = aws_vpc.receipt_scanner_vpc.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = var.az_a
+  cidr_block        = cidrsubnet(var.vpc_cidr_block, 8, count.index)
+  availability_zone = element(data.aws_availability_zones.available.names, count.index % var.num_subnets)
 
   tags = {
     Name = "receipt-scanner"
@@ -47,9 +56,9 @@ resource "aws_route_table" "receipt_scanner_rt" {
   }
 }
 
-# SubnetとRoute tableの関連付け
-resource "aws_route_table_association" "receipt_scanner_rt_associate" {
-  subnet_id      = aws_subnet.receipt_scanner_sn.id
+resource "aws_route_table_association" "receipt_scanner_rta" {
+  count          = var.num_subnets
+  subnet_id      = element(aws_subnet.receipt_scanner_sn.*.id, count.index)
   route_table_id = aws_route_table.receipt_scanner_rt.id
 }
 
@@ -71,7 +80,7 @@ locals {
 }
 
 # Security Group作成
-resource "aws_security_group" "receipt_scanner_ec2_sg" {
+resource "aws_security_group" "receipt_scanner_sg" {
   name        = "receipt-scanner-ec2-sg"
   description = "For EC2 Linux"
   vpc_id      = aws_vpc.receipt_scanner_vpc.id
