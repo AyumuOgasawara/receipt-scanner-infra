@@ -15,8 +15,8 @@ resource "tls_private_key" "receipt_scanner_private_key" {
 # - Windowsの場合はフォルダを"\\"で区切る（エスケープする必要がある）
 # - [terraform apply] 実行後はクライアントPCの公開鍵は自動削除される
 locals {
-  public_key_file  = "/Users/ayumu/.ssh/aws/${var.key_name}.id_rsa.pub"
-  private_key_file = "/Users/ayumu/.ssh/aws/${var.key_name}.id_rsa"
+  public_key_file  = "${var.key_file_path}${var.key_name}.id_rsa.pub"
+  private_key_file = "${var.key_file_path}${var.key_name}.id_rsa"
 }
 
 resource "local_file" "receipt_scanner_private_key_pem" {
