@@ -2,7 +2,7 @@
 [家計簿くん](https://github.com/AyumuOgasawara/receipt-scanner)のインフラリソースを構成・管理するディレクトリ<br>
 
 ## システム構成図
-![receipt-scanner-infra (2)](https://github.com/user-attachments/assets/ade160a7-487e-40f6-9106-33e565a632a7)
+![receipt-scanner-infrav3](https://github.com/user-attachments/assets/68561059-44c7-4a7f-b372-4534d072ab4b)
 
 ### アプリ構成
 - フロントエンド：Next.js
@@ -10,7 +10,7 @@
 - ORM：Prisma
 
 ### データベース
-- RDBMS：PostgreSQL
+- RDS：PostgreSQL
 
 ### レシート解析API
 - 言語；Python
