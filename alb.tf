@@ -45,13 +45,4 @@ resource "aws_lb_target_group_attachment" "receipt_scanner_target_ec2" {
   target_id        = aws_instance.receipt_scanner_ec2.id
 }
 
-resource "aws_lb_listener" "receipt_scanner_listener" {
-  load_balancer_arn = aws_lb.receipt_scanner_alb.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.receipt_scanner_target_group.arn
-  }
-}
+## HTTPSのリスナーは手作業で行なっている
